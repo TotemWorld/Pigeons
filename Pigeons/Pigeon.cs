@@ -2,7 +2,9 @@
 using GeoUtils;
 using GeoUtils.Data;
 using GeoUtils.Extensions;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Pigeons
 {
@@ -146,7 +148,8 @@ namespace Pigeons
         /// </remarks>
         public PigeonBuilder SetLoxodromeMode(GeoUtils.Data.Direction direction)
         {
-            if(_pigeon.Mode == Mode.Geodesic) throw new InvalidOperationException("Cannot set loxodrome mode after geodesic mode has been set.");
+            if (_pigeon.Aleatory) throw new InvalidOperationException("Cannot set loxodrome mode after aleatory mode has been set.");
+            if (_pigeon.Mode == Mode.Geodesic) throw new InvalidOperationException("Cannot set loxodrome mode after geodesic mode has been set.");
             _pigeon.Mode = Mode.Loxodrome;
             _pigeon.Direction = direction;
             _modeCheck = true;
@@ -163,10 +166,25 @@ namespace Pigeons
         /// <exception cref="InvalidOperationException">Thrown if geodesic mode is set after loxodrome mode has been configured.</exception>
         public PigeonBuilder SetGeodesicMode(double bearing)
         {
+            if(_pigeon.Aleatory) throw new InvalidOperationException("Cannot set geodesic mode after aleatory mode has been set.");
             if (_pigeon.Mode == Mode.Loxodrome) throw new InvalidOperationException("Cannot set geodesic mode after loxodrome mode has been set.");
             _pigeon.Mode = Mode.Geodesic;
             _pigeon.Bearing = bearing;
             _modeCheck = true;  
+            return this;
+        }
+        /// <summary>
+        /// Instead of going in one direction, the pigeon will randomly choose a direction at each step, making its path unpredictable.
+        /// </summary>
+        /// <param name="mode">Geodesy or Loxodrome modes</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public PigeonBuilder SetAleatory(Mode mode)
+        {
+            if (_pigeon.Mode != null) throw new InvalidOperationException("Cannot set aleatory mode after mode has been set.");
+            _pigeon.Mode = mode;
+            _modeCheck = true;
+            _pigeon.Aleatory = true;
             return this;
         }
 
@@ -208,6 +226,7 @@ namespace Pigeons
         public Mode? Mode { get; internal set; }
         public CancellationToken ExternalCancellationToken { get; internal set; }
         public BoundingBox BoundingBox { get; internal set; }
+        public bool Aleatory { get; internal set; } = false;
 
         private CancellationTokenSource _src = new CancellationTokenSource();
 
@@ -236,33 +255,72 @@ namespace Pigeons
                 Coordinate next;
                 bool isPointInside;
 
-                if (Mode == GeoUtils.Data.Mode.Loxodrome)
+                if(Aleatory)
                 {
-                    next = Calculations.TranslateByDistanceLoxodrome(position, currentDirection, DistanceStep);
-                    isPointInside = BoundingBox.CheckPointInside(next);
-
-                    if (!isPointInside)
+                    if(Mode == GeoUtils.Data.Mode.Geodesic)
                     {
-                        currentDirection = currentDirection.Reverse();
-                        next = Calculations.TranslateByDistanceLoxodrome(position, currentDirection, DistanceStep);
+                        var random = new Random();
+                        currentBearing = random.Next(0, 360);
+                        next = Translate(position, ref currentBearing, DistanceStep);
+                    }
+                    else
+                    {
+                        var random = new Random();
+                        currentDirection = (GeoUtils.Data.Direction)random.Next(0, 8);
+                        next = Translate(position, ref currentDirection, DistanceStep);
                     }
                 }
                 else
                 {
-                    next = Calculations.TranslateByDistanceGeodesic(position, currentBearing, DistanceStep);
-                    isPointInside = BoundingBox.CheckPointInside(next);
-
-                    if (!isPointInside)
+                    if (Mode == GeoUtils.Data.Mode.Loxodrome)
                     {
-                        currentBearing = (currentBearing + 180) % 360;
-                        next = Calculations.TranslateByDistanceGeodesic(position, currentBearing, DistanceStep);
+                        next = Translate(position, ref currentDirection, DistanceStep);
+                    }
+                    else
+                    {
+                        next = Translate(position, ref currentBearing, DistanceStep);
                     }
                 }
+
 
                 position = next;
                 OnPositionChanged(position);
                 await Task.Delay(Cooldown);
             }
+        }
+
+        private Coordinate Translate(Coordinate position, ref GeoUtils.Data.Direction currentDirection, double step)
+        {
+            Coordinate next;
+            bool isPointInside;
+
+            next = Calculations.TranslateByDistanceLoxodrome(position, currentDirection, step);
+            isPointInside = BoundingBox.CheckPointInside(next);
+
+            if (!isPointInside)
+            {
+                currentDirection = currentDirection.Reverse();
+                next = Calculations.TranslateByDistanceLoxodrome(position, currentDirection, step);
+            }
+
+            return next;
+        }
+
+        private Coordinate Translate(Coordinate position, ref double currentBearing, double step)
+        {
+            Coordinate next;
+            bool isPointInside;
+
+            next = Calculations.TranslateByDistanceGeodesic(position, currentBearing, step);
+            isPointInside = BoundingBox.CheckPointInside(next);
+
+            if (!isPointInside)
+            {
+                currentBearing = (currentBearing + 180) % 360;
+                next = Calculations.TranslateByDistanceGeodesic(position, currentBearing,step);
+            }
+
+            return next;
         }
     }
 }

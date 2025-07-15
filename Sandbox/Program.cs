@@ -5,7 +5,7 @@ using Pigeons;
 var pigeon = new PigeonBuilder()
     .SetGeohash("c2b2md6")
     .SetRandomStartCoordinate()
-    .SetGeodesicMode(90)
+    .SetAleatory(Mode.Geodesic)
     .SetDistanceStep(1)
     .Build();
 

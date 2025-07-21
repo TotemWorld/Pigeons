@@ -282,7 +282,6 @@ namespace Pigeons
                     }
                 }
 
-
                 position = next;
                 OnPositionChanged(position);
                 await Task.Delay(Cooldown);

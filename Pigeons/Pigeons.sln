@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36105.17 d17.14
+VisualStudioVersion = 17.14.36105.17
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pigeons", "Pigeons.csproj", "{CC4055EE-13BE-4B9E-BE01-4143F3D40866}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "..\Sandbox\Sandbox.csproj", "{D9234A40-AE7A-44D1-8DC3-330F66B84752}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeographicLibWrapper", "..\GeographicLibWrapper\GeographicLibWrapper.vcxproj", "{1005DF97-B99F-4242-BC1F-BEAA4F692C7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocket", "..\WebSocket\WebSocket.csproj", "{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,18 @@ Global
 		{1005DF97-B99F-4242-BC1F-BEAA4F692C7C}.Release|x64.Build.0 = Release|x64
 		{1005DF97-B99F-4242-BC1F-BEAA4F692C7C}.Release|x86.ActiveCfg = Release|Win32
 		{1005DF97-B99F-4242-BC1F-BEAA4F692C7C}.Release|x86.Build.0 = Release|Win32
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Debug|x64.Build.0 = Debug|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Release|x64.ActiveCfg = Release|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Release|x64.Build.0 = Release|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3CF5D5B-D11F-4776-ACA8-6CA9BD1C4C4E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

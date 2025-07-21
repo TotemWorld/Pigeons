@@ -2,10 +2,17 @@
 using GeoUtils.Interop;
 using Pigeons;
 
+//var pigeon = new PigeonBuilder()
+//    .SetGeohash("c2b2md6")
+//    .SetRandomStartCoordinate()
+//    .SetAleatory(Mode.Geodesic)
+//    .SetDistanceStep(1)
+//    .Build();
+
 var pigeon = new PigeonBuilder()
     .SetGeohash("c2b2md6")
     .SetRandomStartCoordinate()
-    .SetAleatory(Mode.Geodesic)
+    .SetGeodesicMode(90)
     .SetDistanceStep(1)
     .Build();
 
